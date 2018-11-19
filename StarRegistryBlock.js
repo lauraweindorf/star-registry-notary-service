@@ -18,12 +18,12 @@ class StarRegistryBlock
 
   toString()
   {
-     return `block.height = ${this.height}\n` +
-      `block.body.address = ${this.body.address}\n` +
+		return `block.height = ${this.height}\n` +
+			`block.body.address = ${this.body.address}\n` +
 			`block.body.star = ${JSON.stringify(this.body.star).toString()}\n` +
-      `block.hash = ${this.hash}\n` +
-      `block.time = ${this.time}\n` +
-      `block.previousBlockHash = ${this.previousBlockHash}\n`
+			`block.hash = ${this.hash}\n` +
+			`block.time = ${this.time}\n` +
+			`block.previousBlockHash = ${this.previousBlockHash}\n`
   }
 }
 
