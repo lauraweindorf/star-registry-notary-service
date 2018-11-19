@@ -114,7 +114,6 @@ class MemPool {
  */
 class MemPoolRequest
 {
-
  /**
   * constructor class for memory pool request item
   *

@@ -185,6 +185,8 @@ Request:
 		"star": {
 			"dec": "{dec}",
 			"ra": "{ra}",
+			"mag": "{mag}",
+			"cen": "{cen}",
 			"story": "{story of the Star discovery}"
 		}
 	}
@@ -200,6 +202,8 @@ Response:
 			"star": {
 				"dec": "{dec}",
 				"ra": "{ra}",
+				"mag": "{mag}",
+				"cen": "{cen}",
 				"story": "{story}"
 			}
 		},

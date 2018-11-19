@@ -70,7 +70,7 @@ class StarRegistryServiceController
 			 let blockHeight = await this.getBlockHeight()
 			 if (blockHeight === -1) {
 				 // Create the genesis block
-				 let star = new Star('69 deg 29m 24.9s', '9h 56m 1.0s', GENESIS_STORY)
+				 let star = new Star('69 deg 29m 24.9s', '9h 56m 1.0s', '', '', GENESIS_STORY)
 				 var genesis = new StarRegistryBlock('0', star)
 				 genesis.hash = SHA256(JSON.stringify(genesis)).toString()
 
@@ -258,8 +258,10 @@ class StarRegistryServiceController
 	 *
 	 * POST format: { "address": "{walletAddress}",
 	 * 								"star": {
-	 * 									"dec": "{dec}",
-	 * 									"ra": "{ra}",
+	 * 									"dec": "{dec}",		// declination
+	 * 									"ra": "{ra}",			// right ascension
+	 * 									"mag": "{mag}",		// magnitude
+	 * 									"cen": "{cen}"		// centaurus
 	 * 									"story": "{story}"
 	 * 								}
 	 * 							}
@@ -279,6 +281,7 @@ class StarRegistryServiceController
 
 					let walletAddress = request.payload.address
 					let star = request.payload.star
+					// Star data: MAG and CEN are optional
 					if (walletAddress.length === 0 || star.dec.length === 0 || star.ra.length === 0 || star.story.length === 0) {
 						return boom.badRequest('Invalid block request: missing data')		// 400
 					}

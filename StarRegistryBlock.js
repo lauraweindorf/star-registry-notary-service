@@ -7,7 +7,7 @@ class StarRegistryBlock
 {
   constructor(walletAddress, star)
   {
-		let encodedStar = new Star(star.ra, star.dec, Buffer(star.story).toString('hex'))
+		let encodedStar = new Star(star.dec, star.ra, star.mag, star.cen, Buffer(star.story).toString('hex'))
 
 		this.body = { address: walletAddress, star: encodedStar}
 		this.hash = ''
