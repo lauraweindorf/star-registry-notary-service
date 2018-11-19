@@ -1,6 +1,6 @@
 # Udacity Project: Private Blockchain Notary Service (STAR Registry)
 
-Implements a private Star blockchain API with the endpoints below. The Star Notary Service allows users to register a star on a private blockchain wallet address validation.
+Implements a private Star blockchain API with the endpoints below. The Star Notary Service allows users to register a star on a private blockchain after blockchain identity validation.
 
 The blockchain is initially populated with the Genesis STAR block on startup.
 
