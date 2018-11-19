@@ -59,7 +59,7 @@ Use curl or Postman to try out the endpoints.
 The validation window is 300 seconds, which is the time allotted to complete the next step,
 submitting a request to validate a message signature.
 
-#### POST /requestValidation
+#### POST http://localhost:8000/requestValidation
 
 ### Validate Message signature
 
@@ -79,9 +79,9 @@ the Star was discovered.
 #### POST http://localhost:8000/block
 
 
-### API Endpoints
+## API Endpoints
 
-#### POST http://localhost:8000/requestValidation
+### POST http://localhost:8000/requestValidation
 
 Request to validate blockchain Identity
 
@@ -122,9 +122,7 @@ Response:
 }
 ```
 
-
-
-#### POST http://localhost:8000/message-signature/validate
+### POST http://localhost:8000/message-signature/validate
 
 Validate request using message signature
 
@@ -176,7 +174,7 @@ Response JSON:
 }
 ```
 
-#### POST http://localhost:8000/block
+### POST http://localhost:8000/block
 
 Register a Star block after validating identity
 
@@ -244,7 +242,7 @@ Response JSON:
 ```
 
 
-#### GET http://localhost:8000/block/{index}
+### GET http://localhost:8000/block/{index}
 
 Get a Star block by index
 
@@ -272,7 +270,7 @@ Response:
 }
 ```
 
-#### GET http://localhost:8000/stars/address:{wallet address}
+### GET http://localhost:8000/stars/address:{wallet address}
 
 Get one or more Star blocks that match the wallet address
 
@@ -316,7 +314,7 @@ Response:
 ]
 ```
 
-#### GET http://localhost:8000/stars/hash:{block hash value}
+### GET http://localhost:8000/stars/hash:{block hash value}
 
 Get a Star whose hash value matches the request
 
