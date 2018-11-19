@@ -27,7 +27,7 @@ const StarRegistryBlock = require('./StarRegistryBlock.js')			// the STAR Regist
 const StarMemPoolManager = require('./StarMemPoolManager.js')		// Manager for the STAR validation requests using mem pool
 
 /* ===== Configure HTTP error responses and service logging ===== */
-const boom = require('Boom')
+const boom = require('boom')
 const StarLog = require('./StarLog.js')
 
 /* ===== Gensesis STAR block ===== */
