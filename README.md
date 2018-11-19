@@ -73,8 +73,8 @@ a Star on the blockchain.
 
 ### Register Star
 
-3. Submit the request to register the Star. The Star data includes it's positioning (dec, ra) and the story of how
-the Star was discovered.
+3. Submit the request to register the Star. The Star data includes it's positioning (dec, ra, mag, cen) and the story of how
+the Star was discovered. The mag (Magnitude) and cen (Centaurs) data is optional.
 
 #### POST http://localhost:8000/block
 
@@ -124,7 +124,7 @@ Response:
 
 ### POST http://localhost:8000/message-signature/validate
 
-Validate request using message signature
+Request to validate the wallet address with a message signature
 
 Request JSON:
 
@@ -176,7 +176,7 @@ Response JSON:
 
 ### POST http://localhost:8000/block
 
-Register a Star block after validating identity
+Register and notarize a Star on the blockchain, after validation with message signature
 
 Request:
 ```
@@ -252,7 +252,7 @@ Get a Star block by index
 
 CURL Request example:
 ```
-curl -X GET http://localhost:8000/block/1
+curl -X GET http://localhost:8000/block/0
 ```
 
 Response:
@@ -284,7 +284,8 @@ curl -X GET http://localhost:8000/stars/address:15QnUjixn9S9z708gXe7igCfVCYpL0Na
 ```
 
 Response:
-```[
+```
+[
     {
         "body": {
             "address": "15QnUjixn9S9z708gXe7igCfVCYpL0NavX",
