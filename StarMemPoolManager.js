@@ -237,7 +237,15 @@ class StarMemPoolManager
 		// Check to see if request is already in memPool
 		try {
 			let memPoolRequest = await this.getMemPoolRequest(walletAddress)
-			return new ValidationResponse(memPoolRequest)
+
+			// Check to see if request has already been validated with a message signature
+			if (memPoolRequest.registerStar === true && memPoolRequest.messageSignature === 'valid') {
+				// it's no longer a validationRequest.
+				return {}
+			} else {
+				return new ValidationResponse(memPoolRequest)
+			}
+
 		} catch (err) {
 			// Add the validation request
 			try {

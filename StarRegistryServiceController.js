@@ -116,7 +116,13 @@ class StarRegistryServiceController
 						return boom.badRequest('Invalid wallet address')
 					}
 
-					return await StarMemPoolManager.addValidationRequest(walletAddress)
+					let validationRequest = await StarMemPoolManager.addValidationRequest(walletAddress)
+					if (Object.keys(validationRequest).length === 0)
+					{
+						// Request not found, must be expired or already validated
+						return boom.badRequest(`(${walletAddress}) validation request already completed, and is pending Star registration`)
+					}
+					return validationRequest
 
 				} catch(err) {
 					return boom.badImplementation(`${err.message}`)
