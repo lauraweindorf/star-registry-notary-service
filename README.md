@@ -1,4 +1,5 @@
-# Udacity Project: Private Blockchain Notary Service (STAR Registry)
+# Udacity Project: Private Blockchain Notary Service
+(STAR Registry)
 
 Implements a private Star blockchain API with the endpoints below. The Star Notary Service allows users to register a star on a private blockchain after blockchain identity validation.
 
@@ -13,8 +14,9 @@ returns the remaining time left in the validation window.
 When the validation window expires, the request is removed from the memory pool, requiring a re-submit starting from the beginning of
 the process.
 
-Once the user's blockchain identity and message signature has been verified, the request to register and notarize a Star can be
-submitted and recorded for all time!
+After signing the message and submitting for verification, the user has 1800 seconds to submit the Star for registration on the blockchain.
+
+A successful Star registration is recorded for all time!
 
 ## Getting Started
 
@@ -52,38 +54,12 @@ Use curl or Postman to try out the endpoints.
 
 ### Request validation
 
-1. Submit a request to validation your blockchain identity (btc wallet address)
+1. Submit a request to validation your blockchain identity (BTC wallet address)
 
 The validation window is 300 seconds, which is the time allotted to complete the next step,
 submitting a request to validate a message signature.
 
-#### POST http://localhost:8000/requestValidation
-
-```
-	{
-		"address": "{wallet address}"
-	}
-```
-
-Response:
-```
-	{
-		"walletAddress": "{wallet address}",
-    "requestTimeStamp": "1542587404",
-    "message": "{wallet address}:1542587404:starRegistry",
-    "validationWindow": 300
-	}
-```
-
-### CURL Example
-```
-	curl -X POST http://localhost:8000/requestValidation \
-		-H 'Content-Type: application/json' \
-		-H 'cache-control: no-cache' \
-		-d '{
-				"address": "{wallet address}"
-			}'
-```
+#### POST /requestValidation
 
 ### Validate Message signature
 
@@ -94,42 +70,117 @@ The validation window is 1800 seconds (15 min) for the next step to be completed
 a Star on the blockchain.
 
 #### POST http://localhost:8000/message-signature/validate
+
+### Register Star
+
+3. Submit the request to register the Star. The Star data includes it's positioning (dec, ra) and the story of how
+the Star was discovered.
+
+#### POST http://localhost:8000/block
+
+
+### API Endpoints
+
+#### POST http://localhost:8000/requestValidation
+
+Request to validate blockchain Identity
+
+Request JSON:
+```
+	{
+		"address": "{wallet address}"
+	}
+```
+
+Response JSON:
+```
+	{
+		"walletAddress": "{wallet address}",
+		"requestTimeStamp": "{timestamp}",
+		"message": "{wallet address}:{timestamp}:starRegistry",
+		"validationWindow": 300
+	}
+```
+
+CURL Request example:
+```
+	curl -X POST http://localhost:8000/requestValidation \
+		-H 'Content-Type: application/json' \
+		-H 'cache-control: no-cache' \
+		-d '{
+			"address": "15QnUjixn9S9z708gXe7igCfVCYpL0NavX"
+			}'
+```
+
+Response:
+```
+{
+    "walletAddress": "15QnUjixn9S9z708gXe7igCfVCYpL0NavX",
+    "requestTimeStamp": "1542591617",
+    "message": "15QnUjixn9S9z708gXe7igCfVCYpL0NavX:1542591617:starRegistry",
+    "validationWindow": 300
+}
+```
+
+
+
+#### POST http://localhost:8000/message-signature/validate
+
+Validate request using message signature
+
+Request JSON:
+
 ```
 	{
 		"address": "{wallet address}",
 		"signature": "{message signature}"
 	}
 ```
-Response:
+
+Response JSON:
 ```
 	{
 		"registerStar": {true|false},
 		"status": {
 			"address": "{wallet address}",
-			"requestTimeStamp": "1542587404",
-			"message": "{wallet address}:1542587404:starRegistry",
+			"requestTimeStamp": "{timestamp}",
+			"message": "{wallet address}:{timestamp}:starRegistry",
 			"validationWindow": 1800,
 			"messageSignature": "{valid|invalid}"
 		}
 	}
 ```
 
-### CURL Example
+CURL Request example:
 ```
 	curl -X POST http://localhost:8000/message-signature/validation \
 		-H 'Content-Type: application/json' \
 		-H 'cache-control: no-cache' \
 		-d '{
-				"address": "{wallet address}",
-				"signature": "{message signature}"
+				"address": "15QnUjixn9S9z708gXe7igCfVCYpL0NavX",
+				"signature": "HzRbv4u1IxTn/z63i2OqOQvvICZExPU7WYwxpYELoFK0YJT5C0ClZH3+Mm/5WyDNSj6kIxEJl6glS07SVkrmMJs="
 			}'
 ```
 
-### Register Star
-
-3. Submit the request to register the Star using for format below:
+Response JSON:
+```
+{
+    "registerStar": true,
+    "status": {
+        "address": "15QnUjixn9S9z708gXe7igCfVCYpL0NavX",
+        "requestTimeStamp": "1542591731",
+        "message": "15QnUjixn9S9z708gXe7igCfVCYpL0NavX:1542591617:starRegistry",
+        "validationWindow": 1800,
+        "messageSignature": "valid"
+    }
+}
+```
 
 #### POST http://localhost:8000/block
+
+Register a Star block after validating identity
+
+Request:
 ```
 	{
 		"address": "{wallet address}",
@@ -140,11 +191,12 @@ Response:
 		}
 	}
 ```
+
 Response:
 ```
 	{
-		"hash": "92bb55379b998e13aa6f3e0cf18770936a0e135183e470064fb16086fc235bab",
-		"height": 2,
+		"hash": "{block hash value}",
+		"height": {block height},
 		"body": {
 			"address": "{wallet address}",
 			"star": {
@@ -153,54 +205,144 @@ Response:
 				"story": "{story}"
 			}
 		},
-		"time": "1540060672",
-		"previousBlockHash": "bb7462ac16bcea65133e86999c131b86eaae45b04d35735f4bef73cfa8b2b7d7"
+		"time": "{timestamp}",
+		"previousBlockHash": "{previous block hash value}"
 	}
 ```
 
-### CURL Example
+CURL Request example:
 ```
 	curl -X "POST" "http://localhost:8000/block" \
 		-H 'Content-Type: application/json; charset=utf-8' \
 		-d $'{
 			"address": "142BDCeSGbXjWKaAnYXbMpZ6sbrSAo3DpZ",
 			"star": {
-				"dec": "-26° 29'\'' 24.9",
+				"dec": "-26 29' 24.9",
 				"ra": "16h 29m 1.0s",
-				"story": "Found star using https://www.google.com/sky/"
+				"story": "This one is in the Nebula galaxy, next to the Hapi black hole and Capricorn constellation"
 			}
 		}'
 ```
 
-### API Endpoints
+Response JSON:
+```
+{
+    "body": {
+        "address": "142BDCeSGbXjWKaAnYXbMpZ6sbrSAo3DpZ",
+        "star": {
+            "dec": "16h 29m 1.0s",
+            "ra": "-26 29' 24.9",
+            "story": "54686973206f6e6520697320696e20746865204e6562756c612067616c6178792c206e65787420746f20746865204861706920626c61636b20686f6c6520616e64204361707269636f726e20636f6e7374656c6c6174696f6e",
+            "decodedStory": "This one is in the Nebula galaxy, next to the Hapi black hole and Capricorn constellation"
+        }
+    },
+    "hash": "26a9bbe95744c09c6e91171f7a71c8fe0dbb11557ee7cc26f488d929f859a398",
+    "height": 3,
+    "time": "1542592689",
+    "previousBlockHash": "c05af487c94fa9836de4d2753ae923ab6d02e5b72a9cd6f49253cbe780b88b0c"
+}
+```
 
-#### POST http://localhost:8000/requestValidation
-
-Request to validate blockchain Identity
-
-#### POST http://localhost:8000/message-signature/validate
-
-Validate request using message signature
-
-#### POST http://localhost:8000/block
-
-Register a new Star on the Registry Blockchain
-
-#### POST http://localhost:8000/block
-
-Register a Star block after validating identity
 
 #### GET http://localhost:8000/block/{index}
 
 Get a Star block by index
 
+CURL Request example:
+```
+curl -X GET http://localhost:8000/block/1
+```
+
+Response:
+```
+{
+    "body": {
+        "address": "0",
+        "star": {
+            "dec": "9h 56m 1.0s",
+            "ra": "69 deg 29m 24.9s",
+            "story": "737461722d72656769737472792d6e6f746172792d7365727669636520556461636974792050726f6a656374202d2047656e6573697320626c6f636b20535441523a20466f756e642077697468207777772e676f6f676c652e636f6d2f736b7920284669726562616c6c2047616c61787929",
+            "decodedStory": "star-registry-notary-service Udacity Project - Genesis block STAR: Found with www.google.com/sky (Fireball Galaxy)"
+        }
+    },
+    "hash": "e12fa037d209b1eef5bf1109c903b22292521ec4fbec936f33e4762d0f9fd060",
+    "height": 0,
+    "time": "1542584254",
+    "previousBlockHash": ""
+}
+```
+
 #### GET http://localhost:8000/stars/address:{wallet address}
 
 Get one or more Star blocks that match the wallet address
 
+CURL Request example:
+```
+curl -X GET http://localhost:8000/stars/address:15QnUjixn9S9z708gXe7igCfVCYpL0NavX
+```
+
+Response:
+```[
+    {
+        "body": {
+            "address": "15QnUjixn9S9z708gXe7igCfVCYpL0NavX",
+            "star": {
+                "dec": "2",
+                "ra": "1",
+                "story": "48656c6c6f20576f726c6420233121",
+                "decodedStory": "Hello World #1!"
+            }
+        },
+        "hash": "0eb6bd2cf24a6b0c3b1920f958c199259c9ae203f3552c94453cb9cd2274794b",
+        "height": 1,
+        "time": "1542584433",
+        "previousBlockHash": "e12fa037d209b1eef5bf1109c903b22292521ec4fbec936f33e4762d0f9fd060"
+    },
+    {
+        "body": {
+            "address": "15QnUjixn9S9z708gXe7igCfVCYpL0NavX",
+            "star": {
+                "dec": "2",
+                "ra": "1",
+                "story": "48656c6c6f20576f726c6420233221",
+                "decodedStory": "Hello World #2!"
+            }
+        },
+        "hash": "c05af487c94fa9836de4d2753ae923ab6d02e5b72a9cd6f49253cbe780b88b0c",
+        "height": 2,
+        "time": "1542584561",
+        "previousBlockHash": "0eb6bd2cf24a6b0c3b1920f958c199259c9ae203f3552c94453cb9cd2274794b"
+    }
+]
+```
+
 #### GET http://localhost:8000/stars/hash:{block hash value}
 
 Get a Star whose hash value matches the request
+
+CURL Request example:
+```
+curl -X GET http://localhost:8000/stars/hash:c05af487c94fa9836de4d2753ae923ab6d02e5b72a9cd6f49253cbe780b88b0c
+```
+
+Response:
+```
+{
+    "body": {
+        "address": "15QnUjixn9S9z708gXe7igCfVCYpL0NavX",
+        "star": {
+            "dec": "2",
+            "ra": "1",
+            "story": "48656c6c6f20576f726c6420233221",
+            "decodedStory": "Hello World #2!"
+        }
+    },
+    "hash": "c05af487c94fa9836de4d2753ae923ab6d02e5b72a9cd6f49253cbe780b88b0c",
+    "height": 2,
+    "time": "1542584561",
+    "previousBlockHash": "0eb6bd2cf24a6b0c3b1920f958c199259c9ae203f3552c94453cb9cd2274794b"
+}
+```
 
 ## Built With
 
