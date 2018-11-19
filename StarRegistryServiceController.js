@@ -35,6 +35,10 @@ const StarLog = require('./StarLog.js')
 const GENESIS_STORY = 'star-registry-notary-service Udacity Project - ' +
 			'Genesis block STAR: Found with www.google.com/sky (Fireball Galaxy)'
 
+/* ===== Star's STORY has a maximum of 500 bytes allowed ===== */
+
+const STORY_MAX = 500
+
 /**
  * Controller Definition to encapsulate routes to work with STAR Notary Registration Service
  */
@@ -277,6 +281,10 @@ class StarRegistryServiceController
 					let star = request.payload.star
 					if (walletAddress.length === 0 || star.dec.length === 0 || star.ra.length === 0 || star.story.length === 0) {
 						return boom.badRequest('Invalid block request: missing data')		// 400
+					}
+
+					if (star.story.length > STORY_MAX) {
+						star.story = star.story.substring(0, STORY_MAX)
 					}
 
 					try {
