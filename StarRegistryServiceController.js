@@ -287,13 +287,15 @@ class StarRegistryServiceController
 
 					let walletAddress = request.payload.address
 					let star = request.payload.star
+
+					// Validate Story post request
 					// Star data: MAG and CEN are optional
 					if (walletAddress.length === 0 || star.dec.length === 0 || star.ra.length === 0 || star.story.length === 0) {
 						return boom.badRequest('Invalid block request: missing data')		// 400
-					}
-
-					if (star.story.length > STORY_MAX) {
-						star.story = star.story.substring(0, STORY_MAX)
+					} else if (star.story.length > STORY_MAX) {
+						return boom.badRequest('Invalid block request: story is greater than maximum of 500 bytes')
+					} else if (!isASCII(star.story)) {
+						return boom.badRequest('Invalid block request: story contains non-ASCII characters')
 					}
 
 					try {
@@ -430,6 +432,12 @@ class StarRegistryServiceController
           })
       })
     }
+}
+
+// Check a string to see if it's contents are ASCII-only
+// https://stackoverflow.com/questions/14313183/javascript-regex-how-do-i-check-if-the-string-is-ascii-only
+function isASCII(str) {
+    return /^[\x00-\x7F]*$/.test(str);
 }
 
 /**

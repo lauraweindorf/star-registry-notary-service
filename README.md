@@ -14,7 +14,8 @@ returns the remaining time left in the validation window.
 When the validation window expires, the request is removed from the memory pool, requiring a re-submit starting from the beginning of
 the process.
 
-After signing the message and submitting for verification, the user has 1800 seconds to submit the Star for registration on the blockchain.
+After signing the message and submitting for verification, the user has 1800 seconds to submit the Star for registration
+on the blockchain.
 
 A successful Star registration is recorded for all time!
 
@@ -66,7 +67,7 @@ submitting a request to validate a message signature.
 2. Using your wallet (Electrum was used for this project) sign the message returned from the
 validation request and submit another request to validate the message signature.
 
-The validation window is 1800 seconds (15 min) for the next step to be completed, registering
+The validation window is 1800 seconds (30 min) for the next step to be completed, registering
 a Star on the blockchain.
 
 #### POST http://localhost:8000/message-signature/validate
@@ -177,6 +178,10 @@ Response JSON:
 ### POST http://localhost:8000/block
 
 Register and notarize a Star on the blockchain, after validation with message signature
+
+** The Star story format is ASCII only and is limited to 500 characters. If either of these
+conditions are violated, the service returns an HTTP Bad Request response with a message
+indicating the error.
 
 Request:
 ```
